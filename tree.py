@@ -37,16 +37,20 @@ for i in range(len(p)):
 
 
 d = 0
+dmin = 0
 imin = 0
 jmin = 0
 for k in range(len(p)-1):
-    mn = 100
+    f = 0
     for i in range(0, len(p)):
         for j in range(0, len(p)):
             if p[i].c != p[j].c and i != j:
                 d = sqrt(pow(p[i].x - p[j].x, 2) + pow(p[i].y - p[j].y, 2))
-                if mn > d:
-                    mn = d
+                f += 1
+                if f == 1:
+                    dmin = d
+                if dmin >= d:
+                    dmin = d
                     imin = i
                     jmin = j
     jnt[imin][jmin] = 1
