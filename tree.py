@@ -7,61 +7,56 @@ class Point:
         self.y = y
         self.c = c
 
-jnt = []
 
-def updatec(ix, ixmin,  c):
-    for i in range(len(jnt)):
-        if i != ixmin:
-            if jnt[ix][i] == 1:
-                p[i].c = c
-                updatec(i, ix, c)
+class Joint:
+    def __init__(self, p1, p2, l):
+        self.p1 = p1
+        self.p2 = p2
+        self.l = l
 
 
-# points
+j1 = []
+
+
+def updatec(p, pmin, c):
+    for i in j1:
+        if i.p1 == p and i.p2 != pmin:
+            i.p2.c = c
+            updatec(i.p2, i.p1, c)
+        elif i.p2 == p and i.p1 != pmin:
+            i.p1.c = c
+            updatec(i.p1, i.p2, c)
+
+
 f = open("1.txt")
 p = []
 res = []
 s = f.readline().split()
-i = 0
+q = 0
 while len(s) > 0:
-    p.append(Point(int(s[0]), int(s[1]), i))
-    i += 1
+    p.append(Point(int(s[0]), int(s[1]), q))
+    q += 1
     s = f.readline().split()
 
-
-# joints
+j = []
 for i in range(len(p)):
-    jnt.append([])
-    for j in range(len(p)):
-        jnt[i].append(0)
+    for k in range(len(p)):
+        if i > k:
+            j.append(Joint(p[i], p[k], sqrt(pow(p[i].x - p[k].x, 2) + pow(p[i].y - p[k].y, 2))))
+j = sorted(j, key=lambda x: x.l, reverse=True)
+lenj = len(j) - 1
 
-
-d = 0
-dmin = 0
-imin = 0
-jmin = 0
-for k in range(len(p)-1):
-    f = 0
-    for i in range(0, len(p)):
-        for j in range(0, len(p)):
-            if p[i].c != p[j].c and i != j:
-                d = sqrt(pow(p[i].x - p[j].x, 2) + pow(p[i].y - p[j].y, 2))
-                f += 1
-                if f == 1:
-                    dmin = d
-                if dmin >= d:
-                    dmin = d
-                    imin = i
-                    jmin = j
-    jnt[imin][jmin] = 1
-    jnt[jmin][imin] = 1
-    if p[imin].c < p[jmin].c:
-        updatec(jmin, imin, p[imin].c)
-        p[jmin].c = p[imin].c
-    else:
-        if p[jmin].c < p[imin].c:
-            updatec(imin, jmin, p[jmin].c)
-            p[imin].c = p[jmin].c
-
-for i in jnt:
-    print(i, "\n")
+i = 0
+while i < len(p) - 1:
+    joint = j[lenj]
+    if joint.p1.c != joint.p2.c:
+        j1.append(joint)
+        print(joint.l)
+        i += 1
+        if joint.p1.c > joint.p2.c:
+            joint.p1.c = joint.p2.c
+            updatec(joint.p1, joint.p2, joint.p2.c)
+        else:
+            joint.p2.c = joint.p1.c
+            updatec(joint.p2, joint.p1, joint.p1.c)
+    lenj -= 1
