@@ -1,6 +1,12 @@
 import random
 
+
 def det(x):
+    """
+    returns the determinant of a matrix
+    :param x: list of lists of real numbers (matrix)
+    :return: real (determinant)
+    """
     lenx = len(x)
     if lenx == 1:
         return x[0][0]
@@ -17,13 +23,33 @@ def det(x):
         return d
 
 
-a3 = [[6, 7, 3], [10, 9, 5], [2, 1, 8]]
-a4 = [[6, 7, 3, 9], [10, 9, 5, 1], [2, 1, 8, 11], [1, 3, 7, 4]]
+# A - coefficients. B - constants. l - number of equations and roots
 l = random.randint(1, 5)
-a = []
+A = []
+B = []
+X = []
+
+# fill A, B with random numbers
 for i in range(l):
-    a.append([])
+    A.append([])
+    B.append(random.randint(0, 50))
     for j in range(l):
-        a[i].append(random.randint(0, 50))
-print(a)
-print(det(a))
+        r = random.randint(0, 50)
+        A[i].append(r)
+
+# the part where we calculate the roots
+for i in range(l):
+    AI = []
+    for j in range(l):
+        AI.append([])
+        for k in range(l):
+            if k == i:
+                AI[j].append(B[j])
+            else:
+                AI[j].append(A[j][k])
+    X.append(det(AI) / det(A))
+
+# print all
+for i in range(l):
+    print(A[i], B[i])
+print(X)
